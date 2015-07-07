@@ -1,8 +1,8 @@
 package de.sourcepark.hubbabubba;
 
 import de.sourcepark.hubbabubba.services.CandyService;
-import de.sourcepark.hubbabubba.services.ExampleCandyService;
 import de.sourcepark.hubbabubba.services.HTTPMethod;
+import de.sourcepark.hubbabubba.util.ServiceLoader;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -22,6 +22,12 @@ public class HubbaBubba {
     private static final transient Logger LOG = LoggerFactory.getLogger(HubbaBubba.class);
     
     /**
+     * Initializes a new instance of the HubbaBubba class.
+     */
+    public HubbaBubba() {
+    }
+    
+    /**
      * Starts a new server on a port and with the given services.
      * @param port The port the server is supposed to listen on.
      * @param services The services the server offers.
@@ -38,6 +44,7 @@ public class HubbaBubba {
                     case GET: { 
                         for(final Map.Entry<String, Route> mapping : entry.getValue().entrySet()) {
                             get(mapping.getKey(), mapping.getValue());
+                            LOG.info("Mapped '{}' --> '{}'", mapping.getKey(), mapping.getValue().toString());
                         }
                         break;
                     }

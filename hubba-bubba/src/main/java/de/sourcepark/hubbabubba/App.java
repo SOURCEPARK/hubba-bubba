@@ -30,6 +30,7 @@ public class App {
      * @param args Command line arguments, ignored so far
      */
     public static void main(final String[] args) {
+        LOG.info("Starting the Central Candy Hub [Hubba-Bubba]...");
         final HubbaBubba server = new HubbaBubba();
         server.startServer(PORT, new ExampleCandyService());
     }
