@@ -16,28 +16,33 @@ import static spark.SparkBase.port;
  * @author smatyba
  */
 public class HubbaBubba {
+    /**
+     * Logger.
+     */
     private static final transient Logger LOG = LoggerFactory.getLogger(HubbaBubba.class);
     
+    /**
+     * Starts a new server on a port and with the given services.
+     * @param port The port the server is supposed to listen on.
+     * @param services The services the server offers.
+     */
     public final void startServer(final int port, final CandyService... services) {
-        LOG.debug("Starting server on port {}", port);
         port(port);
+        
+        LOG.info("Starting server on port {}", port);
         
         for(final CandyService service : services) {
             LOG.info("Registering candy service '{}'...", service.getName());
-        }
-        
-        final ExampleCandyService exServ = new ExampleCandyService();
-        
-        for(final Map.Entry<HTTPMethod, Map<String, Route>> entry : exServ.getRoutes().entrySet()) {
-            switch(entry.getKey()) {
-                case GET: { 
-                    for(final Map.Entry<String, Route> mapping : entry.getValue().entrySet()) {
-                        get(mapping.getKey(), mapping.getValue());
+            for(final Map.Entry<HTTPMethod, Map<String, Route>> entry : service.getRoutes().entrySet()) {
+                switch(entry.getKey()) {
+                    case GET: { 
+                        for(final Map.Entry<String, Route> mapping : entry.getValue().entrySet()) {
+                            get(mapping.getKey(), mapping.getValue());
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }
     }
-    
 }
