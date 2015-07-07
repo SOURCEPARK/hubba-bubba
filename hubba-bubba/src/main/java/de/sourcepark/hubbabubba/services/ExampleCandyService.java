@@ -1,12 +1,12 @@
 package de.sourcepark.hubbabubba.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sourcepark.hubbabubba.domain.Example;
 import java.util.HashMap;
 import java.util.Map;
 import spark.Request;
 import spark.Response;
-import spark.Route;
 
 /**
  * The ExampleCandyService class is exactly that: an example candy service mapping 
@@ -20,6 +20,7 @@ public class ExampleCandyService extends CandyService {
      */
     public ExampleCandyService() {
         this.setName("Example Candy Service");
+        this.enable();
     }
     
     /**
@@ -28,17 +29,21 @@ public class ExampleCandyService extends CandyService {
      * String before returning it (which is handling the request made by the 
      * client, btw).
      */
-    public class ExampleGetRoute implements Route {
+    public class ExampleGetRoute extends CandyRoute {
 
         /**
          * Handles the request (a GET request in this case).
          * @param request The actual request object
          * @param response The actual response object
          * @return An instance of {@code Example} converted to JSON
-         * @throws Exception If converting the instance fails.
+         * @throws CandyRouteDisabledException If Route is disabled.
+         * @throws com.fasterxml.jackson.core.JsonProcessingException in case of conversion problems
          */
         @Override
-        public Object handle(Request request, Response response) throws Exception {
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException, JsonProcessingException {
+            if (!isEnabled()) {
+                throw new CandyRouteDisabledException();
+            }
             final Example example = new Example();
             example.setExampleString("This is from the ExampleService class");
             final ObjectMapper mapper = new ObjectMapper();
@@ -55,9 +60,9 @@ public class ExampleCandyService extends CandyService {
      * provides.
      */
     @Override
-    public RouteMap getRoutes() {
+    public RouteMap initializeRoutes() {
         final RouteMap map = new RouteMap();
-        final Map<String, Route> getMap = new HashMap<>();
+        final Map<String, CandyRoute> getMap = new HashMap<>();
         getMap.put("/example", new ExampleGetRoute());
         getMap.put("/test", new ExampleGetRoute());
         map.put(HTTPMethod.GET, getMap);
