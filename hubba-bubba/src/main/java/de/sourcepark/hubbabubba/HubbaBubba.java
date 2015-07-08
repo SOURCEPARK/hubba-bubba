@@ -1,9 +1,8 @@
 package de.sourcepark.hubbabubba;
 
+import de.sourcepark.hubbabubba.services.CandyRoute;
 import de.sourcepark.hubbabubba.services.CandyService;
 import de.sourcepark.hubbabubba.services.HTTPMethod;
-import de.sourcepark.hubbabubba.util.ServiceLoader;
-import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,10 +38,10 @@ public class HubbaBubba {
         
         for(final CandyService service : services) {
             LOG.info("Registering candy service '{}'...", service.getName());
-            for(final Map.Entry<HTTPMethod, Map<String, Route>> entry : service.getRoutes().entrySet()) {
+            for(final Map.Entry<HTTPMethod, Map<String, CandyRoute>> entry : service.initializeRoutes().entrySet()) {
                 switch(entry.getKey()) {
                     case GET: { 
-                        for(final Map.Entry<String, Route> mapping : entry.getValue().entrySet()) {
+                        for(final Map.Entry<String, CandyRoute> mapping : entry.getValue().entrySet()) {
                             get(mapping.getKey(), mapping.getValue());
                             LOG.info("Mapped '{}' --> '{}'", mapping.getKey(), mapping.getValue().toString());
                         }

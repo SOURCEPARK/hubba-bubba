@@ -1,7 +1,6 @@
 package de.sourcepark.hubbabubba.services;
 
 import java.util.Map;
-import spark.Route;
 
 /**
  * The CandyService class is the abstract base class for all candy services.
@@ -32,14 +31,66 @@ public abstract class CandyService {
         this.name = name;
     }
     
+    /** flag indicating, wheter this service is active and usable at the moment or not (default: true)*/ 
+    private boolean enabled = true;
+
+    /**
+     * Get the value of enabled (the flag indicating, wheter this service is active and usable at the moment or not)
+     *
+     * @return the value of enabled
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Set enabled = true (the flag indicating, wheter this service is active and usable at the moment or not) 
+     */
+    public final void enable() {
+        this.enabled=true;
+        if (routeMap!=null) {
+            for(final Map.Entry<HTTPMethod, Map<String, CandyRoute>> entry : getRouteMap().entrySet()) {
+                for(final Map.Entry<String, CandyRoute> mapping : entry.getValue().entrySet()) {
+                    mapping.getValue().enable();
+                }
+            }
+        }
+    }
+    
+    /**
+     * Set enabled = false (the flag indicating, wheter this service is active and usable at the moment or not) 
+     */
+    public final void disable() {
+        this.enabled=false;
+        if (routeMap!=null) {
+            for(final Map.Entry<HTTPMethod, Map<String, CandyRoute>> entry : getRouteMap().entrySet()) {
+                for(final Map.Entry<String, CandyRoute> mapping : entry.getValue().entrySet()) {
+                    mapping.getValue().disable();
+                }
+            }
+        }
+    }
+    
+    private RouteMap routeMap;
+
+    /**
+     * Get the RouteMap of this CandyService
+     *
+     * @return the routeMap
+     */
+    public RouteMap getRouteMap() {
+        return routeMap;
+    }
+    
     /**
      * When implemented in a class, this method returns the routes this service 
-     * provides. 
+     * provides and sets the local RouteMap.
      * 
      * The {@code RouteMap} this method returns contains a mapping between URLs 
      * and the corresponding route instances mapped to the appropriate HTTP methods.
      * @return An instance of {@code RouteMap} representing all routes this service
      * can handle.
      */
-    public abstract RouteMap getRoutes();    
+    public abstract RouteMap initializeRoutes();  
+      
 }
