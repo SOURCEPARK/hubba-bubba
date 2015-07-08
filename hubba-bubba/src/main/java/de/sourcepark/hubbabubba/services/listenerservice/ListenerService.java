@@ -10,7 +10,8 @@ import de.sourcepark.hubbabubba.services.RouteMap;
 public class ListenerService extends CandyService {
 
     @Override
-    public RouteMap getRoutes() {
+    public RouteMap initializeRoutes() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     
