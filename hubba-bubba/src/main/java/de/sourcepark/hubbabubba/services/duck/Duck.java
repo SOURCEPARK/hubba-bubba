@@ -25,7 +25,7 @@ public class Duck {
      */
     private static final transient Logger LOG = LoggerFactory.getLogger(Duck.class);
     
-    private static String duckURL = "http://19.168.38.xx/cgi-bin/duckcgi.py";
+    private static String duckURL = "";
     private final static String orderCommand = "?command=e";
     private final static String calibrateCommand = "?command=c";
     private final static String quarterTurnCommand = "?command=s";
@@ -57,7 +57,30 @@ public class Duck {
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
-        LOG.debug("Sending 'GET' request to URL : " + url);
+        LOG.debug("Sending 'GET' request for order to URL : " + url);
+        LOG.debug("Response Code : " + responseCode);
+        StringBuffer response;
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        }
+
+        //print result
+        LOG.debug("Duck responded: "+response.toString());
+    }
+    
+    public static void calibrate(String address) throws MalformedURLException, IOException {
+        //FIXME: address validation???
+        String url = duckURL+calibrateCommand+address;
+        URL urlObj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        LOG.debug("Sending 'GET' request for calibration to URL : " + url);
         LOG.debug("Response Code : " + responseCode);
         StringBuffer response;
         try (BufferedReader in = new BufferedReader(
