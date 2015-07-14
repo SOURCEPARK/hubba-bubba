@@ -1,6 +1,7 @@
 package de.sourcepark.hubbabubba;
 
 import de.sourcepark.hubbabubba.services.ExampleCandyService;
+import de.sourcepark.hubbabubba.services.KeypadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,6 @@ public class App {
     public static void main(final String[] args) {
         LOG.info("Starting the Central Candy Hub [Hubba-Bubba]...");
         final HubbaBubba server = new HubbaBubba();
-        server.startServer(PORT, new ExampleCandyService());
+        server.startServer(PORT, new ExampleCandyService(), new KeypadService());
     }
 }

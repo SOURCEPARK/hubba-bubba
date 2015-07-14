@@ -6,8 +6,8 @@ import de.sourcepark.hubbabubba.services.HTTPMethod;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import spark.Route;
 import static spark.Spark.get;
+import static spark.Spark.post;
 import static spark.SparkBase.port;
 
 /**
@@ -43,7 +43,13 @@ public class HubbaBubba {
                     case GET: { 
                         for(final Map.Entry<String, CandyRoute> mapping : entry.getValue().entrySet()) {
                             get(mapping.getKey(), mapping.getValue());
-                            LOG.info("Mapped '{}' --> '{}'", mapping.getKey(), mapping.getValue().toString());
+                            LOG.info("Mapped '{}' --> '{}' (GET)", mapping.getKey(), mapping.getValue().toString());
+                        }
+                        break;
+                    } case POST: {
+                        for(final Map.Entry<String, CandyRoute> mapping : entry.getValue().entrySet()) {
+                            post(mapping.getKey(), mapping.getValue());
+                            LOG.info("Mapped '{}' --> '{}' (POST)", mapping.getKey(), mapping.getValue().toString());
                         }
                         break;
                     }
