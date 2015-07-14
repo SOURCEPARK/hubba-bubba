@@ -1,5 +1,6 @@
 package de.sourcepark.hubbabubba.services;
 
+import de.sourcepark.hubbabubba.Config;
 import de.sourcepark.hubbabubba.services.duck.Duck;
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class ControlUnitService extends CandyService {
                 throw new CandyRouteDisabledException();
             }
             try {
-                Duck.getInstance("http://192.168.38.95/cgi-bin/duckcgi.py").orderCandy(request.params("no"));
+                Duck.getInstance(Config.duckURL).orderCandy(request.params("no"));
                 return "OK";
             } catch (IOException ex) {
                 LOG.error("IO problem occured during a DUCK order", ex);
@@ -34,6 +35,7 @@ public class ControlUnitService extends CandyService {
             
         }
     }
+    
     public class CalibrateRoute extends CandyRoute {
 
         @Override
@@ -42,12 +44,43 @@ public class ControlUnitService extends CandyService {
                 throw new CandyRouteDisabledException();
             }
             try {
-                Duck.getInstance("http://192.168.38.95/cgi-bin/duckcgi.py").calibrate(request.params("no"));
+                Duck.getInstance(Config.duckURL).calibrate(request.params("no"));
                 return "OK";
             } catch (IOException ex) {
                 LOG.error("IO problem occured during a DUCK calibration", ex);
                 return "IOERR";
             }
+            
+        }
+    }
+    
+    public class StepRoute extends CandyRoute {
+
+        @Override
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException {
+            if(!this.isEnabled()) {
+                throw new CandyRouteDisabledException();
+            }
+            try {
+                Duck.getInstance(Config.duckURL).step(request.params("no"));
+                return "OK";
+            } catch (IOException ex) {
+                LOG.error("IO problem occured during a DUCK step", ex);
+                return "IOERR";
+            }
+            
+        }
+    }
+    
+    public class AuthorizeRoute extends CandyRoute {
+
+        @Override
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException {
+            if(!this.isEnabled()) {
+                throw new CandyRouteDisabledException();
+            }
+            throw new UnsupportedOperationException("not yet implemented");
+            //return CandyUser-object
             
         }
     }
@@ -70,6 +103,8 @@ public class ControlUnitService extends CandyService {
         final Map<String, CandyRoute> postMap = new HashMap<>();
         postMap.put("/control/order/:no", new ControlUnitService.OrderRoute());
         postMap.put("/control/calibrate/:no", new ControlUnitService.CalibrateRoute());
+        postMap.put("/control/step/:no", new ControlUnitService.StepRoute());
+        postMap.put("/control/authorize/:user", new ControlUnitService.AuthorizeRoute());
         map.put(HTTPMethod.POST, postMap);
         final Map<String, CandyRoute> getMap = new HashMap<>();
         getMap.put("/control/order", new ControlUnitService.InfoRoute());

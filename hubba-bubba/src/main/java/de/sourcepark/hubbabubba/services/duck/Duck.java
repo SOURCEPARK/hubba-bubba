@@ -28,7 +28,7 @@ public class Duck {
     private static String duckURL = "";
     private final static String orderCommand = "?command=e";
     private final static String calibrateCommand = "?command=c";
-    private final static String quarterTurnCommand = "?command=s";
+    private final static String stepCommand = "?command=s";
 
     // the Duck
     private static Duck instance;
@@ -81,6 +81,29 @@ public class Duck {
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
         LOG.debug("Sending 'GET' request for calibration to URL : " + url);
+        LOG.debug("Response Code : " + responseCode);
+        StringBuffer response;
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+        }
+
+        //print result
+        LOG.debug("Duck responded: "+response.toString());
+    }
+    
+    public static void step(String address) throws MalformedURLException, IOException {
+        //FIXME: address validation???
+        String url = duckURL+stepCommand+address;
+        URL urlObj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
+        con.setRequestMethod("GET");
+        int responseCode = con.getResponseCode();
+        LOG.debug("Sending 'GET' request for step to URL : " + url);
         LOG.debug("Response Code : " + responseCode);
         StringBuffer response;
         try (BufferedReader in = new BufferedReader(
