@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.sourcepark.hubbabubba.Config;
 import de.sourcepark.hubbabubba.HubbaBubba;
 import de.sourcepark.hubbabubba.domain.CandyError;
-import de.sourcepark.hubbabubba.domain.Example;
 import de.sourcepark.hubbabubba.services.duck.Duck;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -36,12 +36,14 @@ public class ControlUnitService extends CandyService {
                 return "OK";
             } catch (IOException ex) {
                 LOG.error("IO problem occured during a DUCK order: {}", ex.getMessage(), ex);
-                final CandyError error = new CandyError();
-                error.setErrorCode(HubbaBubba.ERROR_CODE_DUCK_IO);
-                error.setErrorName(HubbaBubba.ERROR_NAME_DUCK_IO);
-                error.setErrorMessage("DUCK ist nicht erreichbar");
+                final CandyError error = new CandyError(
+                    HubbaBubba.ERROR_CODE_DUCK_IO,
+                    HubbaBubba.ERROR_NAME_DUCK_IO,
+                    "DUCK ist nicht erreichbar"
+                );
                 
                 final ObjectMapper mapper = new ObjectMapper();
+                // 503 -> Service unavailable
                 response.status(503);
                 response.type("application/json");
                 return mapper.writeValueAsString(error);
@@ -119,7 +121,6 @@ public class ControlUnitService extends CandyService {
         postMap.put("/control/calibrate/:no", new ControlUnitService.CalibrateRoute());
         postMap.put("/control/step/:no", new ControlUnitService.StepRoute());
         postMap.put("/control/authorize/:user", new ControlUnitService.AuthorizeRoute());
-    
         map.put(HTTPMethod.POST, postMap);
         final Map<String, CandyRoute> getMap = new HashMap<>();
         getMap.put("/control/order", new ControlUnitService.InfoRoute());
