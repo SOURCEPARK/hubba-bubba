@@ -60,8 +60,7 @@ public class Duck {
         LOG.debug("Sending 'GET' request for order to URL : " + url);
         LOG.debug("Response Code : " + responseCode);
         StringBuffer response;
-        try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
             String inputLine;
             response = new StringBuffer();
             while ((inputLine = in.readLine()) != null) {

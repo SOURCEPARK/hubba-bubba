@@ -20,6 +20,9 @@ public class HubbaBubba {
      */
     private static final transient Logger LOG = LoggerFactory.getLogger(HubbaBubba.class);
     
+    public static final transient int ERROR_CODE_DUCK_IO = 100;
+    public static final transient String ERROR_NAME_DUCK_IO = "DUCK_IO_ERROR";
+    
     /**
      * Initializes a new instance of the HubbaBubba class.
      */
