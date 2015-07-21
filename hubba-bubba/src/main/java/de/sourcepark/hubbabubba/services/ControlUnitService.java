@@ -119,6 +119,7 @@ public class ControlUnitService extends CandyService {
         postMap.put("/control/calibrate/:no", new ControlUnitService.CalibrateRoute());
         postMap.put("/control/step/:no", new ControlUnitService.StepRoute());
         postMap.put("/control/authorize/:user", new ControlUnitService.AuthorizeRoute());
+        postMap.put("/control/listener/register/:name", new ControlUnitService.AuthorizeRoute());
     
         map.put(HTTPMethod.POST, postMap);
         final Map<String, CandyRoute> getMap = new HashMap<>();
