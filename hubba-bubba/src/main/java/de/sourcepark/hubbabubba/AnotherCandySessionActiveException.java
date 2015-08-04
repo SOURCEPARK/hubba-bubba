@@ -10,7 +10,7 @@ package de.sourcepark.hubbabubba;
  * controller is active
  * @author lsotoudeh
  */
-class AnotherCandySessionActiveException extends Exception {
+public class AnotherCandySessionActiveException extends Exception {
     
     public AnotherCandySessionActiveException(String message) {
         super(message);

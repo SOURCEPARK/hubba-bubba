@@ -2,6 +2,8 @@ package de.sourcepark.hubbabubba.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sourcepark.hubbabubba.AnotherCandySessionActiveException;
+import de.sourcepark.hubbabubba.CandySession;
 import de.sourcepark.hubbabubba.Config;
 import de.sourcepark.hubbabubba.HubbaBubba;
 import de.sourcepark.hubbabubba.domain.CandyError;
@@ -9,6 +11,7 @@ import de.sourcepark.hubbabubba.services.duck.Duck;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -88,6 +91,12 @@ public class ControlUnitService extends CandyService {
             if(!this.isEnabled()) {
                 throw new CandyRouteDisabledException();
             }
+//            try {
+//                CandySession activeSession = CandySession.getInstance(request.ip());
+//            } catch (AnotherCandySessionActiveException ex) {
+//                java.util.logging.Logger.getLogger(ControlUnitService.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+            
             throw new UnsupportedOperationException("not yet implemented");
             //return CandyUser-object
             
