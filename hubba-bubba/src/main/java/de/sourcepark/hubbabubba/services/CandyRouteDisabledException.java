@@ -9,7 +9,7 @@ package de.sourcepark.hubbabubba.services;
  * Exception is thrown, when Route is disabled
  * @author lsotoudeh
  */
-class CandyRouteDisabledException extends Exception {
+public class CandyRouteDisabledException extends Exception {
 
     public CandyRouteDisabledException() {
     }

@@ -22,6 +22,10 @@ public class HubbaBubba {
     
     public static final transient int ERROR_CODE_DUCK_IO = 100;
     public static final transient String ERROR_NAME_DUCK_IO = "DUCK_IO_ERROR";
+    public static final transient int ERROR_CODE_GENERAL_IO = 101;
+    public static final transient String ERROR_NAME_GENERAL_IO = "REGISTER_IO_ERROR";
+    public static final transient int ERROR_CODE_PARAM = 102;
+    public static final transient String ERROR_NAME_PARAM = "PARAM_ERR";
     
     /**
      * Initializes a new instance of the HubbaBubba class.
