@@ -11,6 +11,6 @@ package de.sourcepark.hubbabubba;
  */
 public class Config {
     //FIXME: Config aus Datei o.ä. befüllen
-    public static String duckURL = "http://192.168.38.95/cgi-bin/duckcgi.py";
+    public static String duckURL = "http://localhost/cgi-bin/duckcgi.py";
     
 }

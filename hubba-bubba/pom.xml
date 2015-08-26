@@ -17,7 +17,7 @@
             <artifactId>spark-core</artifactId>
             <version>2.2</version>
         </dependency>
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
@@ -59,6 +59,36 @@
             <version>1.4.6</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.sourcepark.hubbabubba.App</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                        <manifestEntries>
+                            <BuildVersion>${project.version}-B${timestamp}</BuildVersion>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+	    
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/hubbabubba-dist.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>	
+        </plugins>        
+    </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
