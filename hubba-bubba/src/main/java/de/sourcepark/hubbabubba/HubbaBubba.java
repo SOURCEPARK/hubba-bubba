@@ -26,6 +26,12 @@ public class HubbaBubba {
     public static final transient String ERROR_NAME_GENERAL_IO = "REGISTER_IO_ERROR";
     public static final transient int ERROR_CODE_PARAM = 102;
     public static final transient String ERROR_NAME_PARAM = "PARAM_ERR";
+    public static final transient int ERROR_CODE_USER_REGISTRY_NOT_FOUND = 103;
+    public static final transient String ERROR_NAME_USER_REGISTRY_NOT_FOUND = "USER_REG_NOT_FOUND_ERR";
+    public static final transient int ERROR_CODE_USER_REGISTRY_IO = 104;
+    public static final transient String ERROR_NAME_USER_REGISTRY_IO = "USER_REG_IO_ERR";
+    public static final transient int ERROR_CODE_USER_NOT_FOUND = 105;
+    public static final transient String ERROR_NAME_USER_NOT_FOUND = "USER_NOT_FOUND_ERR";
     
     /**
      * Initializes a new instance of the HubbaBubba class.

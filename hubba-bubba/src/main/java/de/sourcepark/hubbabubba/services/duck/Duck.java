@@ -27,8 +27,12 @@ public class Duck {
     
     private static String duckURL = "";
     private final static String orderCommand = "?command=e";
-    private final static String calibrateCommand = "?command=c";
+    private final static String calibrateCommand = "?command=k";
     private final static String stepCommand = "?command=s";
+    private final static String motorCommand = "?command=m";
+    private final static String colOnCommand = "?command=c";
+    private final static String rowOnCommand = "?command=r";
+    private final static String allOffCommand = "?command=x";
 
     // the Duck
     private static Duck instance;
@@ -49,15 +53,14 @@ public class Duck {
         }
         return Duck.instance;
     }
-
-    public static void orderCandy(String address) throws MalformedURLException, IOException {
-        //FIXME: address validation???
-        String url = duckURL+orderCommand+address;
+    
+    public static void sendDuckCommand(String command, String param) throws MalformedURLException, IOException {
+        String url = duckURL+command+param;
         URL urlObj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
         con.setRequestMethod("GET");
         int responseCode = con.getResponseCode();
-        LOG.debug("Sending 'GET' request for order to URL : " + url);
+        LOG.debug("Sending 'GET' request for command " + command + " to URL : " + url);
         LOG.debug("Response Code : " + responseCode);
         StringBuffer response;
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
@@ -71,50 +74,32 @@ public class Duck {
         //print result
         LOG.debug("Duck responded: "+response.toString());
     }
+
+    public static void orderCandy(String address) throws MalformedURLException, IOException {
+        sendDuckCommand(orderCommand, address);
+    }
     
     public static void calibrate(String address) throws MalformedURLException, IOException {
-        //FIXME: address validation???
-        String url = duckURL+calibrateCommand+address;
-        URL urlObj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
-        con.setRequestMethod("GET");
-        int responseCode = con.getResponseCode();
-        LOG.debug("Sending 'GET' request for calibration to URL : " + url);
-        LOG.debug("Response Code : " + responseCode);
-        StringBuffer response;
-        try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-        }
-
-        //print result
-        LOG.debug("Duck responded: "+response.toString());
+        sendDuckCommand(calibrateCommand, address);
     }
     
     public static void step(String address) throws MalformedURLException, IOException {
-        //FIXME: address validation???
-        String url = duckURL+stepCommand+address;
-        URL urlObj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
-        con.setRequestMethod("GET");
-        int responseCode = con.getResponseCode();
-        LOG.debug("Sending 'GET' request for step to URL : " + url);
-        LOG.debug("Response Code : " + responseCode);
-        StringBuffer response;
-        try (BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-        }
-
-        //print result
-        LOG.debug("Duck responded: "+response.toString());
+        sendDuckCommand(stepCommand, address);
+    }
+    
+    public static void motor(String address) throws MalformedURLException, IOException {
+        sendDuckCommand(motorCommand, address);
+    }
+    
+    public static void colOn(String address) throws MalformedURLException, IOException {
+        sendDuckCommand(motorCommand, address);
+    }
+    
+    public static void rowOn(String address) throws MalformedURLException, IOException {
+        sendDuckCommand(rowOnCommand, address);
+    }
+    
+    public static void allOff() throws MalformedURLException, IOException {
+        sendDuckCommand(allOffCommand, "xx");
     }
 }
