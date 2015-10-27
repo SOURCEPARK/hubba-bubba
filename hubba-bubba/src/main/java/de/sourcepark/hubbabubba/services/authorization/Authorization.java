@@ -47,11 +47,8 @@ public class Authorization {
     public static Authorization getInstance(String authorizationFilePath) throws FileNotFoundException, IOException {
         if (Authorization.instance == null) {
             Authorization.instance = new Authorization();
-            
-            populateUserRegistry(authorizationFilePath);
-            
-            
         }
+        populateUserRegistry(authorizationFilePath);
         return Authorization.instance;
     }
     
