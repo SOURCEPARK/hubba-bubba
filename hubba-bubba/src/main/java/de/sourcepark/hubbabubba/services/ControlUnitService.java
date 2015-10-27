@@ -140,7 +140,7 @@ public class ControlUnitService extends CandyService {
     public class DUCKRowOnRoute extends CandyRoute {
 
         @Override
-        public Object handle(Request request, Response response) throws CandyRouteDisabledException {
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException, JsonProcessingException {
             if(!this.isEnabled()) {
                 throw new CandyRouteDisabledException();
             }
