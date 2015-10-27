@@ -12,6 +12,6 @@ package de.sourcepark.hubbabubba;
 public class Config {
     //FIXME: Config aus Datei o.ä. befüllen
     public static String duckURL = "http://localhost/cgi-bin/duckcgi.py";
-    public static String authorizationFilePath = "/var/lib/candyrobot/authorizedUsers.csv";
+    public static String authorizationFilePath = "/var/lib/candyrobot/userregistry.csv";
     
 }
