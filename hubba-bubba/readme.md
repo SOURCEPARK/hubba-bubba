@@ -1,5 +1,5 @@
 Die Konfiguration ist aktuell noch in der Klasse de.sourcepark.hubbabubba.Config enthalten. 
-Das darin referenzierte authorizationFile (csv) hat folgendes Format: <Karten-ID>[;<Nickname>]
+Das darin referenzierte authorizationFile (csv) hat folgendes Format: <Karten-ID>[;<Nickname>][;Begrüßung]
 
 Autorisierungsanfragen werden an den ControlUnitService (de.sourcepark.hubbabubba.services) geschickt: 
 POST /control/authorize/:id
