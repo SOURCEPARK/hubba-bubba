@@ -17,6 +17,8 @@ public class User {
     private String nickname;
     
     private String cardId;
+    
+    private String salutation;
 
     public User() {
     }
@@ -57,6 +59,24 @@ public class User {
      */
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+    
+    /**
+     * Get the value of salutation
+     *
+     * @return the value of salutation
+     */
+    public String getSalutation() {
+        return salutation;
+    }
+
+    /**
+     * Set the value of salutation
+     *
+     * @param salutation new value of salutation
+     */
+    public void setSalutation(String salutation) {
+        this.salutation = salutation;
     }
 
 }
