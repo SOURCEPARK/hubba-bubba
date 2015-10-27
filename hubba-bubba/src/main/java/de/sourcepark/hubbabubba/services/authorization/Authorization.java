@@ -65,6 +65,9 @@ public class Authorization {
             tmpUser.setCardId(split[0]);
             if (split.length>1) {
                 tmpUser.setNickname(split[1]);
+            } 
+            if (split.length>2) {
+                tmpUser.setSalutation(split[2]);
             }
             userRegistry.put(tmpUser.getCardId(), tmpUser);
         }
