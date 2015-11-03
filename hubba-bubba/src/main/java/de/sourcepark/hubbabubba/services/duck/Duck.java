@@ -92,7 +92,7 @@ public class Duck {
     }
     
     public static void colOn(String address) throws MalformedURLException, IOException {
-        sendDuckCommand(motorCommand, address);
+        sendDuckCommand(colOnCommand, address);
     }
     
     public static void rowOn(String address) throws MalformedURLException, IOException {
