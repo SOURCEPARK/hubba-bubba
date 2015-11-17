@@ -1,9 +1,9 @@
-fed73177;Pink Fluffy Unicorn;Sehr geehrtes
-1e3edf5c;Plüschmonster;Huhu
-ceaf2f77
-de453277;Imperator;Heil
-8e30b05c;Franzerl;Servus
-8eec3177
-6ed13077
-4e3bb15c;Torsten;Hallo
-8e773377;Sugardaddy;Mahlzeit
+fed73177;true;Pink Fluffy Unicorn;Sehr geehrtes
+1e3edf5c;true;Plüschmonster;Huhu
+ceaf2f77;true
+de453277;true;Imperator;Heil
+8e30b05c;false;Franzerl;Servus
+8eec3177;false
+6ed13077;false
+4e3bb15c;false;Torsten;Hallo
+8e773377;false;Sugardaddy;Mahlzeit
