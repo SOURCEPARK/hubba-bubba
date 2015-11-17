@@ -6,20 +6,20 @@
 package de.sourcepark.hubbabubba;
 
 import de.sourcepark.hubbabubba.services.authorization.User;
-import de.sourcepark.hubbabubba.state.ICandySessionState;
+import de.sourcepark.hubbabubba.state.CandySessionState;
 import de.sourcepark.hubbabubba.state.SessionStartState;
 
 /**
  *
  * @author lsotoudeh
  */
-public class CandySession implements ICandySessionState {
+public class CandySession extends CandySessionState {
     // the Duck
     private static CandySession instance;
     
     private static String controllerName;
     
-    private static ICandySessionState state;
+    private static CandySessionState state;
 
     private static User user;
 
@@ -60,7 +60,7 @@ public class CandySession implements ICandySessionState {
      * returns the current state of the Session 
      * @return the current state of the Session
      */
-    public ICandySessionState getState() {
+    public CandySessionState getState() {
         return state;
     }
     
@@ -68,7 +68,7 @@ public class CandySession implements ICandySessionState {
      * sets the current state of the Session 
      * @param state the new state of the Session
      */
-    public void setState(ICandySessionState state) {
+    public void setState(CandySessionState state) {
         CandySession.state = state;
     }
     

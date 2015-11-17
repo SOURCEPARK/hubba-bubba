@@ -9,11 +9,9 @@ package de.sourcepark.hubbabubba.state;
  *
  * @author lsotoudeh
  */
-public class SelecterState implements ICandySessionState {
+public class SelecterState extends CandySessionState {
 
-    @Override
-    public void doAction() {
-        System.out.println("SELECTER State");
+    public SelecterState() {
+        setIdentifier(SELECTER_STATE);
     }
-    
 }

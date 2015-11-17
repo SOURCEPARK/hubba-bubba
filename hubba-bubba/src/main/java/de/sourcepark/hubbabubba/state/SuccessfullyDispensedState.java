@@ -9,11 +9,11 @@ package de.sourcepark.hubbabubba.state;
  *
  * @author lsotoudeh
  */
-public class SuccessfullyDispensedState implements ICandySessionState {
+public class SuccessfullyDispensedState extends CandySessionState {
 
-    @Override
-    public void doAction() {
-        System.out.println("SUCCESSFULLY DISPENSED state");
+    public SuccessfullyDispensedState() {
+        setIdentifier(SUCCESSFULLY_DISPENSED_STATE);
     }
+
     
 }

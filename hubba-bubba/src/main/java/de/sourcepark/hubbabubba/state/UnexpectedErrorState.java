@@ -9,11 +9,12 @@ package de.sourcepark.hubbabubba.state;
  *
  * @author lsotoudeh
  */
-public class UnexpectedErrorState implements ICandySessionState {
+public class UnexpectedErrorState extends CandySessionState {
 
-    @Override
-    public void doAction() {
-        System.out.println("UNEXPECTED ERROR state");
+    public UnexpectedErrorState() {
+        setIdentifier(UNEXPECTED_ERROR_STATE);
     }
+
+    
     
 }

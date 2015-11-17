@@ -9,11 +9,12 @@ package de.sourcepark.hubbabubba.state;
  *
  * @author lsotoudeh
  */
-public class SessionStartState implements ICandySessionState {
+public class SessionStartState extends CandySessionState {
 
-    @Override
-    public void doAction() {
-        System.out.println("SESSION START state");
+    public SessionStartState() {
+        setIdentifier(SESSION_START_STATE);
     }
+
+    
     
 }

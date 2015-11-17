@@ -9,11 +9,12 @@ package de.sourcepark.hubbabubba.state;
  *
  * @author lsotoudeh
  */
-public class TerminatorState implements ICandySessionState {
+public class TerminatorState extends CandySessionState {
 
-    @Override
-    public void doAction() {
-        System.out.println("TERMINATOR state");
+    public TerminatorState() {
+        setIdentifier(TERMINATOR_STATE);
     }
+
+    
     
 }

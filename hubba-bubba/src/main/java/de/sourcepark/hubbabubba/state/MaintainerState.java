@@ -9,11 +9,10 @@ package de.sourcepark.hubbabubba.state;
  *
  * @author lsotoudeh
  */
-public class MaintainerState implements ICandySessionState {
+public class MaintainerState extends CandySessionState {
 
-    @Override
-    public void doAction() {
-        System.out.println("MAINTAINER State");
+    public MaintainerState() {
+        setIdentifier(MAINTAINER_STATE);
     }
     
 }
