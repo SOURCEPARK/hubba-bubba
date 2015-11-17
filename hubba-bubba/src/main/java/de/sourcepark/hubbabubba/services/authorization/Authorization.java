@@ -60,10 +60,13 @@ public class Authorization {
             tmpUser = new User();
             tmpUser.setCardId(split[0].toUpperCase());
             if (split.length>1) {
-                tmpUser.setNickname(split[1]);
+                tmpUser.setMaintenanceStaff(Boolean.parseBoolean(split[1]));
             } 
             if (split.length>2) {
-                tmpUser.setSalutation(split[2]);
+                tmpUser.setNickname(split[2]);
+            } 
+            if (split.length>3) {
+                tmpUser.setSalutation(split[3]);
             }
             userRegistry.put(tmpUser.getCardId(), tmpUser);
         }

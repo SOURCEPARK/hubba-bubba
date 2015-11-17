@@ -5,19 +5,24 @@
  */
 package de.sourcepark.hubbabubba;
 
+import de.sourcepark.hubbabubba.services.authorization.User;
+import de.sourcepark.hubbabubba.state.ICandySessionState;
+import de.sourcepark.hubbabubba.state.SessionStartState;
+
 /**
  *
  * @author lsotoudeh
  */
-public class CandySession {
+public class CandySession implements ICandySessionState {
     // the Duck
     private static CandySession instance;
     
     private static String controllerName;
     
-    private static SessionState state;
+    private static ICandySessionState state;
 
-    
+    private static User user;
+
 
     // Singleton constructor
     private CandySession() {
@@ -34,7 +39,7 @@ public class CandySession {
             CandySession.instance = new CandySession();
             //FIXME: Konfigurationsabfrage der zulässigen Controller
             CandySession.controllerName = controllerName;
-            state = SessionState.NEW;
+            state = new SessionStartState();
         } else {
             if (!controllerName.equalsIgnoreCase(CandySession.controllerName)) {
                 throw new AnotherCandySessionActiveException(CandySession.controllerName + " is active.");
@@ -47,29 +52,52 @@ public class CandySession {
      * Constructor providing a Singleton CandySession, if there is an open one
      * @return the Singleton CandySession, if there is an open one
      */
-    public static CandySession getExistingInstance() {
+    public CandySession getExistingInstance() {
         return CandySession.instance;
     }
     
     /**
      * returns the current state of the Session 
-     * @return the current state of the Session specified by Enum SessionState
+     * @return the current state of the Session
      */
-    public static SessionState getState() {
+    public ICandySessionState getState() {
         return state;
     }
     
-    public void stateTransition(SessionState newState) {
-        //FIXME
-//        if (newState.getId()<state.getId()) {
-//            throw new SessionStateTransitionException(state, newState);
-//        }
-        throw new UnsupportedOperationException();
+    /**
+     * sets the current state of the Session 
+     * @param state the new state of the Session
+     */
+    public void setState(ICandySessionState state) {
+        CandySession.state = state;
     }
+    
+    
     
     public static void release() {
         controllerName = null;
         instance = null;
         state = null;
+        user = null;
+    }
+
+    @Override
+    public void doAction() {
+        CandySession.state.doAction();
+    }
+    
+    
+    /**
+     * @return the user
+     */
+    public static User getUser() {
+        return user;
+    }
+
+    /**
+     * @param user the user to set
+     */
+    public static void setUser(User user) {
+        CandySession.user = user;
     }
 }

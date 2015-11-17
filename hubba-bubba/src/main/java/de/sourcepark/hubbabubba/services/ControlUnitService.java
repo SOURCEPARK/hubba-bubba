@@ -2,12 +2,21 @@ package de.sourcepark.hubbabubba.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.sourcepark.hubbabubba.AnotherCandySessionActiveException;
+import de.sourcepark.hubbabubba.CandySession;
 import de.sourcepark.hubbabubba.Config;
 import de.sourcepark.hubbabubba.HubbaBubba;
+import de.sourcepark.hubbabubba.state.SelecterState;
+import de.sourcepark.hubbabubba.state.SessionStartState;
 import de.sourcepark.hubbabubba.domain.CandyError;
 import de.sourcepark.hubbabubba.services.authorization.Authorization;
 import de.sourcepark.hubbabubba.services.authorization.User;
 import de.sourcepark.hubbabubba.services.duck.Duck;
+import de.sourcepark.hubbabubba.state.DispenserState;
+import de.sourcepark.hubbabubba.state.MaintainerState;
+import de.sourcepark.hubbabubba.state.SuccessfullyDispensedState;
+import de.sourcepark.hubbabubba.state.TerminatorState;
+import de.sourcepark.hubbabubba.state.UnexpectedErrorState;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,6 +33,8 @@ import spark.Response;
 public class ControlUnitService extends CandyService {
 
     private static final transient Logger LOG = LoggerFactory.getLogger(ControlUnitService.class);
+    
+    private static CandySession session;
        
     public class DUCKOrderRoute extends CandyRoute {
 
@@ -31,10 +42,22 @@ public class ControlUnitService extends CandyService {
         public Object handle(Request request, Response response) throws CandyRouteDisabledException, JsonProcessingException {
             if(!this.isEnabled()) {
                 throw new CandyRouteDisabledException();
-            }
-            
+            } 
+            boolean maintaining = false;
+            maintaining = (session.getState() instanceof MaintainerState);
+            session.setState(new DispenserState());
+            session.doAction();
             try {
                 Duck.getInstance(Config.duckURL).orderCandy(request.params("no"));
+                session.setState(new SuccessfullyDispensedState());
+                session.doAction();
+                if (maintaining) {
+                    session.setState(new MaintainerState());
+                } else {
+                    session.setState(new TerminatorState());
+                    session.doAction();
+                    CandySession.release();
+                }
                 return "OK";
             } catch (IOException ex) {
                 LOG.error("IO problem occured during a DUCK order command: {}", ex.getMessage(), ex);
@@ -42,6 +65,15 @@ public class ControlUnitService extends CandyService {
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
                 response.type("application/json");
+                session.setState(new UnexpectedErrorState());
+                session.doAction();
+                if (maintaining) {
+                    session.setState(new MaintainerState());
+                } else {
+                    session.setState(new TerminatorState());
+                    session.doAction();
+                }
+                CandySession.release();
                 return mapper.writeValueAsString(error);
             }
             
@@ -64,6 +96,9 @@ public class ControlUnitService extends CandyService {
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
                 response.type("application/json");
+                session.setState(new UnexpectedErrorState());
+                session.doAction();
+                session.setState(new MaintainerState());
                 return mapper.writeValueAsString(error);
             }
             
@@ -86,6 +121,9 @@ public class ControlUnitService extends CandyService {
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
                 response.type("application/json");
+                session.setState(new UnexpectedErrorState());
+                session.doAction();
+                session.setState(new MaintainerState());
                 return mapper.writeValueAsString(error);
             }
             
@@ -108,6 +146,9 @@ public class ControlUnitService extends CandyService {
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
                 response.type("application/json");
+                session.setState(new UnexpectedErrorState());
+                session.doAction();
+                session.setState(new MaintainerState());
                 return mapper.writeValueAsString(error);
             }
             
@@ -130,6 +171,9 @@ public class ControlUnitService extends CandyService {
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
                 response.type("application/json");
+                session.setState(new UnexpectedErrorState());
+                session.doAction();
+                session.setState(new MaintainerState());
                 return mapper.writeValueAsString(error);
             }
             
@@ -152,6 +196,9 @@ public class ControlUnitService extends CandyService {
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
                 response.type("application/json");
+                session.setState(new UnexpectedErrorState());
+                session.doAction();
+                session.setState(new MaintainerState());
                 return mapper.writeValueAsString(error);
             }
             
@@ -174,9 +221,39 @@ public class ControlUnitService extends CandyService {
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
                 response.type("application/json");
+                session.setState(new UnexpectedErrorState());
+                session.doAction();
+                session.setState(new MaintainerState());
                 return mapper.writeValueAsString(error);
             }
             
+        }
+    }
+    
+    public class MaintenanceModeRoute extends CandyRoute {
+
+        @Override
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException, JsonProcessingException {
+            if(!this.isEnabled()) {
+                throw new CandyRouteDisabledException();
+            }
+            session.setState(new MaintainerState());
+            session.doAction();
+            return "OK";
+        }
+    }
+    
+    public class CancelRoute extends CandyRoute {
+
+        @Override
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException, JsonProcessingException {
+            if(!this.isEnabled()) {
+                throw new CandyRouteDisabledException();
+            }
+            session.setState(new TerminatorState());
+            session.doAction();
+            CandySession.release();
+            return "OK";
         }
     }
     
@@ -189,12 +266,30 @@ public class ControlUnitService extends CandyService {
             }
             
             try {
+                session = CandySession.getNewInstance("an example controller");
+                session.setState(new SessionStartState());
+                session.doAction();
+            } catch (AnotherCandySessionActiveException ex) {
+                final CandyError error = new CandyError(HubbaBubba.ERROR_CODE_SESSION_ACTIVE,HubbaBubba.ERROR_NAME_SESSION_ACTIVE, "Es ist bereits eine Candy Session aktiv.");                
+                final ObjectMapper mapper = new ObjectMapper();
+                response.status(503);
+                response.type("application/json");
+                return mapper.writeValueAsString(error);
+            }
+            
+            try {
                 User user = Authorization.getInstance(Config.authorizationFilePath).authorize(request.params("id"));
                 if (user!=null) { 
+                    session.setUser(user);
+                    session.setState(new SelecterState());
+                    session.doAction();
                     final ObjectMapper mapper = new ObjectMapper();
                     response.type("application/json");
                     return mapper.writeValueAsString(user);
                 } else {
+                    session.setState(new TerminatorState());
+                    session.doAction();
+                    CandySession.release();
                     final CandyError error = new CandyError(HubbaBubba.ERROR_CODE_USER_NOT_FOUND,HubbaBubba.ERROR_NAME_USER_NOT_FOUND, "Die Person ist nicht autorisiert.");                
                     final ObjectMapper mapper = new ObjectMapper();
                     response.status(503);
@@ -251,6 +346,8 @@ public class ControlUnitService extends CandyService {
         postMap.put("/control/rowon/:no", new ControlUnitService.DUCKRowOnRoute());
         postMap.put("/control/alloff", new ControlUnitService.DUCKAllOffRoute());
         postMap.put("/control/authorize/:id", new ControlUnitService.AuthorizeRoute());
+        postMap.put("/control/maintenanceMode", new ControlUnitService.MaintenanceModeRoute());
+        postMap.put("/control/cancel", new ControlUnitService.CancelRoute());
     
         map.put(HTTPMethod.POST, postMap);
         final Map<String, CandyRoute> getMap = new HashMap<>();
