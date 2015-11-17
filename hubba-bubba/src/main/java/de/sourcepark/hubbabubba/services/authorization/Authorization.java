@@ -6,7 +6,6 @@
 package de.sourcepark.hubbabubba.services.authorization;
 
 import com.opencsv.CSVReader;
-import com.opencsv.bean.ColumnPositionMappingStrategy;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -59,7 +58,7 @@ public class Authorization {
         String[] split;
         while ((split = reader.readNext()) != null) {
             tmpUser = new User();
-            tmpUser.setCardId(split[0]);
+            tmpUser.setCardId(split[0].toUpperCase());
             if (split.length>1) {
                 tmpUser.setNickname(split[1]);
             } 
@@ -76,7 +75,7 @@ public class Authorization {
      * @return the User, if a User fits to the cardId, else null
      */
     public static User authorize(final String cardId) {
-        return userRegistry.get(cardId);
+        return userRegistry.get(cardId.toUpperCase());
     }
     
     public static void reloadUserRegistry(String authorizationFilePath) throws FileNotFoundException, IOException {

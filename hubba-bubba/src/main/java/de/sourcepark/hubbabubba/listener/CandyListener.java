@@ -5,13 +5,25 @@
  */
 package de.sourcepark.hubbabubba.listener;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author lsotoudeh
  */
 public class CandyListener {
+    
+        
+    /**
+     * Logger.
+     */
+    private static final transient Logger LOG = LoggerFactory.getLogger(CandyListener.class);
     
     private String host;
         
@@ -37,6 +49,16 @@ public class CandyListener {
         hash = 59 * hash + Objects.hashCode(this.host);
         return hash;
     }
+//    
+//    public void processRESTCommand(String command) throws MalformedURLException, IOException {
+//        String url = host+"/"+command;
+//        URL urlObj = new URL(url);
+//        HttpURLConnection con = (HttpURLConnection) urlObj.openConnection();
+//        con.setRequestMethod("POST");
+//        LOG.debug("Sending 'POST' request for command " + command + " to CandyListener : " + name);
+//        int responseCode = con.getResponseCode();
+//        LOG.debug("CandyListener " + name + " responded: " + responseCode);
+//    }
     
     
 
