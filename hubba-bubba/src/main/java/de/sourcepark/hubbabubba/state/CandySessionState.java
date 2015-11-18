@@ -69,7 +69,7 @@ public abstract class CandySessionState {
             try {
                 ClientResponse response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class);
                 String responseText = response.getEntity(String.class);
-                if (responseText.equals("OK")) {
+                if (response.getStatus()==200) {
                     LOG.debug("Successfully sent state update (" + identifier + ") to Listener: " + listener.getName());
                 } else {
                     LOG.error("Error responded during state update (" + identifier + ") for Listener: " + listener.getName() + ", response was:\n\t" + responseText);

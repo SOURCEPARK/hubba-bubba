@@ -90,12 +90,9 @@ public class AudioPlayer extends CandyService {
 	    }
 	    final ObjectMapper mapper = new ObjectMapper();
 
-	    response.status(
-		    200);
-	    response.type(
-		    "text/html");
-	    return mapper.writeValueAsString(
-		    "OK");
+	    response.status(200);
+	    response.type("text/html");
+	    return mapper.writeValueAsString("OK");
 	}
     }
 
@@ -109,9 +106,9 @@ public class AudioPlayer extends CandyService {
     @Override
     public RouteMap initializeRoutes() {
 	final RouteMap map = new RouteMap();
-	final Map<String, CandyRoute> getMap = new HashMap<>();
-	getMap.put("/audio/:state", new AudioPlayerRoute());
-	map.put(HTTPMethod.GET, getMap);
+	final Map<String, CandyRoute> postMap = new HashMap<>();
+	postMap.put("/audio/:state", new AudioPlayerRoute());
+	map.put(HTTPMethod.POST, postMap);
 	return map;
     }
 }
