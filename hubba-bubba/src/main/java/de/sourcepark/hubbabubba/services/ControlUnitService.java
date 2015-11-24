@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -45,15 +46,20 @@ public class ControlUnitService extends CandyService {
             } 
             boolean maintaining = false;
             maintaining = (session.getState() instanceof MaintainerState);
-            session.setState(new DispenserState());
-            session.doAction();
             try {
                 Duck.getInstance(Config.duckURL).orderCandy(request.params("no"));
-                session.setState(new SuccessfullyDispensedState());
+                session.setState(new DispenserState());
                 session.doAction();
+//                session.setState(new SuccessfullyDispensedState());
+//                session.doAction();
                 if (maintaining) {
                     session.setState(new MaintainerState());
                 } else {
+                    try {
+                        Thread.sleep(6000l);
+                    } catch (InterruptedException ex1) {
+                        //expected
+                    }
                     session.setState(new TerminatorState());
                     session.doAction();
                     CandySession.release();
@@ -66,14 +72,31 @@ public class ControlUnitService extends CandyService {
                 response.status(503);
                 response.type("application/json");
                 session.setState(new UnexpectedErrorState());
+//                try {
+//                    Thread.sleep(6000l);
+//                } catch (InterruptedException ex1) {
+//                    //expected
+//                }
                 session.doAction();
                 if (maintaining) {
+                    try {
+                        Thread.sleep(2000l);
+                    } catch (InterruptedException ex1) {
+                        //expected
+                    }
                     session.setState(new MaintainerState());
                 } else {
+                    try {
+                        Thread.sleep(2000l);
+                    } catch (InterruptedException ex1) {
+                        //expected
+                    }
                     session.setState(new TerminatorState());
                     session.doAction();
+                    
+                    CandySession.release();
                 }
-                CandySession.release();
+                
                 return mapper.writeValueAsString(error);
             }
             
@@ -269,6 +292,11 @@ public class ControlUnitService extends CandyService {
                 session = CandySession.getNewInstance("an example controller");
                 session.setState(new SessionStartState());
                 session.doAction();
+                try {
+                    Thread.sleep(2200l);
+                } catch (InterruptedException ex) {
+                    //expected
+                }
             } catch (AnotherCandySessionActiveException ex) {
                 final CandyError error = new CandyError(HubbaBubba.ERROR_CODE_SESSION_ACTIVE,HubbaBubba.ERROR_NAME_SESSION_ACTIVE, "Es ist bereits eine Candy Session aktiv.");                
                 final ObjectMapper mapper = new ObjectMapper();

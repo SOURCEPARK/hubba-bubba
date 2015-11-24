@@ -54,40 +54,61 @@ public class AudioPlayer extends CandyService {
 	    }
 	    final AudioPlayer audioPlayer = new AudioPlayer();
 	    String state = request.params("state");
-	    switch (state) {
-		case CandySessionState.MAINTAINER_STATE: {
-		    try {
-			Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /home/candy/maintenance.mp3");
-		    } catch (IOException ex) {
-			Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
-		    }
-		    break;
-		}
-		case CandySessionState.SELECTER_STATE: {
-		    try {
-			Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /home/candy/candyshop.mp3");
-		    } catch (IOException ex) {
-			Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
-		    }
-		    break;
-		}
-		case CandySessionState.DISPENSER_STATE: {
-		    try {
-			Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /home/candy/sugarshort.mp3");
-		    } catch (IOException ex) {
-			Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
-		    }
-		    break;
-		}
-		case CandySessionState.UNEXPECTED_ERROR_STATE: {
-		    try {
-			Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /home/candy/don't_panic.mp3");
-		    } catch (IOException ex) {
-			Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
-		    }
-		    break;
-		}
-	    }
+            try {
+                switch (state) {
+                    case CandySessionState.MAINTAINER_STATE: {
+                        try {
+                            Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /var/lib/candyrobot/sounds/maintenance.mp3");
+                        } catch (IOException ex) {
+                            Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                    case CandySessionState.SELECTER_STATE: {
+                        try {
+                            Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /var/lib/candyrobot/sounds/candyshop.mp3");
+//                            Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /data/local/privat/music/02_Musik/Cher/Believe/Believe.mp3");
+                        } catch (IOException ex) {
+                            Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                    case CandySessionState.DISPENSER_STATE: {
+                        try {
+                            Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /var/lib/candyrobot/sounds/sugarshort.mp3");
+                        } catch (IOException ex) {
+                            Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                    case CandySessionState.UNEXPECTED_ERROR_STATE: {
+                        try {
+                            Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /var/lib/candyrobot/sounds/don't_panic.mp3");
+                        } catch (IOException ex) {
+                            Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                    case CandySessionState.TERMINATOR_STATE: {
+                        try {
+                            Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /var/lib/candyrobot/sounds/baby.mp3");
+                        } catch (IOException ex) {
+                            Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                    case CandySessionState.SESSION_START_STATE: {
+                        try {
+                            Process p = Runtime.getRuntime().exec("/usr/bin/mplayer /var/lib/candyrobot/sounds/servus.mp3");
+                        } catch (IOException ex) {
+                            Logger.getLogger(AudioPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        break;
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
 	    final ObjectMapper mapper = new ObjectMapper();
 
 	    response.status(200);

@@ -22,6 +22,7 @@ public class CandyListenerRegistry {
     // Singleton constructor
     private CandyListenerRegistry() {
         listeners = new HashSet<>();
+        listeners.add(new CandyListener("http://localhost:9999/audio/", "Audio Player"));
     }
 
     /**
