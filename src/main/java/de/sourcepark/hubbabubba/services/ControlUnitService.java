@@ -6,6 +6,9 @@ import de.sourcepark.hubbabubba.AnotherCandySessionActiveException;
 import de.sourcepark.hubbabubba.CandySession;
 import de.sourcepark.hubbabubba.Config;
 import de.sourcepark.hubbabubba.HubbaBubba;
+import de.sourcepark.hubbabubba.services.slot.Slot;
+import de.sourcepark.hubbabubba.services.slot.SlotNotFoundException;
+import de.sourcepark.hubbabubba.services.slot.Slots;
 import de.sourcepark.hubbabubba.state.SelecterState;
 import de.sourcepark.hubbabubba.state.SessionStartState;
 import de.sourcepark.hubbabubba.domain.CandyError;
@@ -36,7 +39,47 @@ public class ControlUnitService extends CandyService {
     private static final transient Logger LOG = LoggerFactory.getLogger(ControlUnitService.class);
     
     private static CandySession session;
-       
+
+    public class DUCKSlotInfoRoute extends CandyRoute {
+
+        @Override
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException, JsonProcessingException {
+            if(!this.isEnabled()) {
+                throw new CandyRouteDisabledException();
+            }
+
+            String orderNo = request.params("no");
+            try {
+                Slot slot = Slots.get(orderNo);
+
+                final ObjectMapper mapper = new ObjectMapper();
+                response.type("application/json");
+                return mapper.writeValueAsString(slot);
+            } catch (IOException e) {
+                LOG.error("Slot-Initialisierung nicht möglich", e);
+                final CandyError error = new CandyError(
+                        HubbaBubba.ERROR_CODE_SLOT_IO,
+                        HubbaBubba.ERROR_NAME_SLOT_IO,
+                        "Slot-Initialisierung nicht möglich (IO error)");
+
+                final ObjectMapper mapper = new ObjectMapper();
+                response.status(503);
+                response.type("application/json");
+                return mapper.writeValueAsString(error);
+            } catch (SlotNotFoundException e) {
+                final CandyError error = new CandyError(
+                        HubbaBubba.ERROR_CODE_SLOT_NOT_FOUND,
+                        HubbaBubba.ERROR_NAME_SLOT_NOT_FOUND,
+                        "Der angeforderte Slot existiert nicht");
+
+                final ObjectMapper mapper = new ObjectMapper();
+                response.status(503);
+                response.type("application/json");
+                return mapper.writeValueAsString(error);
+            }
+        }
+    }
+
     public class DUCKOrderRoute extends CandyRoute {
 
         @Override
@@ -381,6 +424,7 @@ public class ControlUnitService extends CandyService {
         map.put(HTTPMethod.POST, postMap);
         final Map<String, CandyRoute> getMap = new HashMap<>();
         getMap.put("/control/order", new ControlUnitService.InfoRoute());
+        getMap.put("/control/order/:no/info", new ControlUnitService.DUCKSlotInfoRoute());
         map.put(HTTPMethod.GET, getMap);
         return map;
     }
