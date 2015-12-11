@@ -306,7 +306,8 @@ public class ControlUnitService extends CandyService {
             }
             
             try {
-                User user = Authorization.getInstance(Config.authorizationFilePath).authorize(request.params("id"));
+                Authorization userRegistry = Authorization.getInstance(Config.authorizationFilePath);
+                User user = userRegistry.authorize(request.params("id"));
                 if (user!=null) { 
                     session.setUser(user);
                     session.setState(new SelecterState());
