@@ -424,10 +424,9 @@ public class ControlUnitService extends CandyService {
         map.put(HTTPMethod.POST, postMap);
         final Map<String, CandyRoute> getMap = new HashMap<>();
         getMap.put("/control/order", new ControlUnitService.InfoRoute());
-        getMap.put("/control/order/:no/info", new ControlUnitService.DUCKSlotInfoRoute());
+        getMap.put("/control/slot/:no", new ControlUnitService.DUCKSlotInfoRoute());
         map.put(HTTPMethod.GET, getMap);
         return map;
     }
-    
     
 }
