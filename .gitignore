@@ -1,1 +1,3 @@
-/hubba-bubba/target/
+target/
+*.iml
+.idea

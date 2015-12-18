@@ -34,6 +34,10 @@ public class HubbaBubba {
     public static final transient String ERROR_NAME_USER_NOT_FOUND = "USER_NOT_FOUND_ERR";
     public static final transient int ERROR_CODE_SESSION_ACTIVE = 106;
     public static final transient String ERROR_NAME_SESSION_ACTIVE = "SESSION_ACTIVE_ERR";
+    public static final transient int ERROR_CODE_SLOT_NOT_FOUND = 107;
+    public static final transient String ERROR_NAME_SLOT_NOT_FOUND = "SLOT_NOT_FOUND";
+    public static final transient int ERROR_CODE_SLOT_IO = 108;
+    public static final transient String ERROR_NAME_SLOT_IO = "SLOT_IO_ERR";
     
     /**
      * Initializes a new instance of the HubbaBubba class.
