@@ -7,7 +7,9 @@ public class Slot {
     private String slotNo;
     private String prize;
     private boolean btcAllowed;
+    private boolean cardAllowed;
     private String btcRcvAddress;
+    private String itemsRemaining;
 
     public String getSlotNo() {
         return slotNo;
@@ -21,21 +23,24 @@ public class Slot {
         return btcAllowed;
     }
 
+    public boolean isCardAllowed() {
+        return cardAllowed;
+    }
+
     public String getBtcRcvAddress() {
         return btcRcvAddress;
     }
 
-    public Slot(String slotNo, String prize, boolean btcAllowed, String btcRcvAddress) {
+    public String getItemsRemaining() {
+        return itemsRemaining;
+    }
+
+    public Slot(String slotNo, String prize, boolean btcAllowed, boolean cardAllowed, String btcRcvAddress, String itemsRemaining) {
         this.slotNo = slotNo;
         this.prize = prize;
         this.btcAllowed = btcAllowed;
+        this.cardAllowed = cardAllowed;
         this.btcRcvAddress = btcRcvAddress;
-    }
-
-    public Slot(String slotNo, String prize, boolean btcAllowed) throws Exception {
-        if (btcAllowed)
-            throw new Exception("If bitcoin is allowed for slot, receiver address has to be set");
-
-        new Slot(slotNo, prize, btcAllowed, null);
+        this.itemsRemaining = itemsRemaining;
     }
 }

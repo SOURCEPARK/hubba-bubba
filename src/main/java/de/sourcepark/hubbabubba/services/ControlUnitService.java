@@ -7,6 +7,7 @@ import de.sourcepark.hubbabubba.CandySession;
 import de.sourcepark.hubbabubba.Config;
 import de.sourcepark.hubbabubba.HubbaBubba;
 import de.sourcepark.hubbabubba.services.slot.Slot;
+import de.sourcepark.hubbabubba.services.slot.SlotNotFilledException;
 import de.sourcepark.hubbabubba.services.slot.SlotNotFoundException;
 import de.sourcepark.hubbabubba.services.slot.Slots;
 import de.sourcepark.hubbabubba.state.SelecterState;
@@ -70,7 +71,17 @@ public class ControlUnitService extends CandyService {
                 final CandyError error = new CandyError(
                         HubbaBubba.ERROR_CODE_SLOT_NOT_FOUND,
                         HubbaBubba.ERROR_NAME_SLOT_NOT_FOUND,
-                        "Der angeforderte Slot existiert nicht");
+                        "Der angeforderte Slot existiert nicht!");
+
+                final ObjectMapper mapper = new ObjectMapper();
+                response.status(503);
+                response.type("application/json");
+                return mapper.writeValueAsString(error);
+            } catch (SlotNotFilledException e) {
+                final CandyError error = new CandyError(
+                        HubbaBubba.ERROR_CODE_SLOT_NOT_FILLED,
+                        HubbaBubba.ERROR_NAME_SLOT_NOT_FILLED,
+                        "Der angeforderte Slot ist nicht befüllt!");
 
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);

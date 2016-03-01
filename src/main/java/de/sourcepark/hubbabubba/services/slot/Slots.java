@@ -32,21 +32,25 @@ public class Slots {
         String orderNo;
         String prize;
         boolean btcAllowed;
+        boolean cardAllowed;
         String btcReceiverAddress;
+        String itemsRemaining;
 
         String[] split;
         while ((split = slotReader.readNext()) != null) {
             orderNo = split[0].toUpperCase();
             prize = split[1];
             btcAllowed = Boolean.parseBoolean(split[2]);
-            btcReceiverAddress = split[3];
+            cardAllowed = Boolean.parseBoolean(split[3]);
+            btcReceiverAddress = split[4];
+            itemsRemaining = split[5];
 
-            Slot slot = new Slot(orderNo, prize, btcAllowed, btcReceiverAddress);
+            Slot slot = new Slot(orderNo, prize, btcAllowed, cardAllowed, btcReceiverAddress, itemsRemaining);
             slots.put(slot.getSlotNo(), slot);
         }
     }
 
-    public static Slot get(String slotNo) throws IOException, SlotNotFoundException {
+    public static Slot get(String slotNo) throws IOException, SlotNotFoundException, SlotNotFilledException {
         if (!initialized) {
             Slots.initialize();
             initialized = true;
@@ -56,6 +60,8 @@ public class Slots {
 
         if (slot == null)
             throw new SlotNotFoundException("Slot " + slotNo + " does not exist");
+        else if (Integer.parseInt(slot.getItemsRemaining()) == 0)
+            throw new SlotNotFilledException("Slot " + slotNo + " is not filled");
         else
             return slot;
     }
