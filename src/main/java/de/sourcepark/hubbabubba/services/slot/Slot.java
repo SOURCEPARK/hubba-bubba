@@ -1,5 +1,7 @@
 package de.sourcepark.hubbabubba.services.slot;
 
+import java.io.IOException;
+
 /**
  * Created by jnaperkowski on 11.12.15.
  */
@@ -19,11 +21,11 @@ public class Slot {
         return prize;
     }
 
-    public boolean isBtcAllowed() {
+    public Boolean isBtcAllowed() {
         return btcAllowed;
     }
 
-    public boolean isCardAllowed() {
+    public Boolean isCardAllowed() {
         return cardAllowed;
     }
 
@@ -35,6 +37,11 @@ public class Slot {
         return itemsRemaining;
     }
 
+    public void decreaseItemsRemaining() throws IOException {
+        this.itemsRemaining = ((Integer) (Integer.parseInt(this.itemsRemaining) - 1)).toString();
+        Slots.writeAll();
+    }
+
     public Slot(String slotNo, String prize, boolean btcAllowed, boolean cardAllowed, String btcRcvAddress, String itemsRemaining) {
         this.slotNo = slotNo;
         this.prize = prize;
@@ -42,5 +49,16 @@ public class Slot {
         this.cardAllowed = cardAllowed;
         this.btcRcvAddress = btcRcvAddress;
         this.itemsRemaining = itemsRemaining;
+    }
+
+    public String[] toArray() {
+        return new String[] {
+                getSlotNo(),
+                getPrize(),
+                isBtcAllowed().toString(),
+                isCardAllowed().toString(),
+                getBtcRcvAddress(),
+                getItemsRemaining()
+        };
     }
 }

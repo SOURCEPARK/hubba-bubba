@@ -6,6 +6,7 @@
 package de.sourcepark.hubbabubba.services.slot;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import de.sourcepark.hubbabubba.Config;
 import de.sourcepark.hubbabubba.services.authorization.User;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,5 +66,17 @@ public class Slots {
             throw new SlotNotFilledException("Slot " + slotNo + " is not filled");
         else
             return slot;
+    }
+
+    protected static void writeAll() throws IOException {
+        if (!initialized)
+            return;
+
+        CSVWriter writer = new CSVWriter(new FileWriter(Config.slotInfoFilePath), ';', '"');
+        for(Slot slot: slots.values()) {
+            writer.writeNext(slot.toArray());
+        }
+
+        writer.close();
     }
 }

@@ -18,14 +18,13 @@ import de.sourcepark.hubbabubba.services.authorization.User;
 import de.sourcepark.hubbabubba.services.duck.Duck;
 import de.sourcepark.hubbabubba.state.DispenserState;
 import de.sourcepark.hubbabubba.state.MaintainerState;
-import de.sourcepark.hubbabubba.state.SuccessfullyDispensedState;
 import de.sourcepark.hubbabubba.state.TerminatorState;
 import de.sourcepark.hubbabubba.state.UnexpectedErrorState;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Request;
@@ -62,6 +61,55 @@ public class ControlUnitService extends CandyService {
                         HubbaBubba.ERROR_CODE_SLOT_IO,
                         HubbaBubba.ERROR_NAME_SLOT_IO,
                         "Slot-Initialisierung nicht möglich (IO error)");
+
+                final ObjectMapper mapper = new ObjectMapper();
+                response.status(503);
+                response.type("application/json");
+                return mapper.writeValueAsString(error);
+            } catch (SlotNotFoundException e) {
+                final CandyError error = new CandyError(
+                        HubbaBubba.ERROR_CODE_SLOT_NOT_FOUND,
+                        HubbaBubba.ERROR_NAME_SLOT_NOT_FOUND,
+                        "Der angeforderte Slot existiert nicht!");
+
+                final ObjectMapper mapper = new ObjectMapper();
+                response.status(503);
+                response.type("application/json");
+                return mapper.writeValueAsString(error);
+            } catch (SlotNotFilledException e) {
+                final CandyError error = new CandyError(
+                        HubbaBubba.ERROR_CODE_SLOT_NOT_FILLED,
+                        HubbaBubba.ERROR_NAME_SLOT_NOT_FILLED,
+                        "Der angeforderte Slot ist nicht befüllt!");
+
+                final ObjectMapper mapper = new ObjectMapper();
+                response.status(503);
+                response.type("application/json");
+                return mapper.writeValueAsString(error);
+            }
+        }
+    }
+
+    public class DUCKSlotDecreaseItemsRoute extends CandyRoute {
+
+        @Override
+        public Object handle(Request request, Response response) throws CandyRouteDisabledException, JsonProcessingException {
+            if(!this.isEnabled()) {
+                throw new CandyRouteDisabledException();
+            }
+
+            String orderNo = request.params("no");
+            try {
+                Slot slot = Slots.get(orderNo);
+                slot.decreaseItemsRemaining();
+
+                return "OK";
+            } catch (IOException e) {
+                LOG.error("Konnte Anzahl vorhandener items in slot {} nicht verringern", orderNo, e);
+                final CandyError error = new CandyError(
+                        HubbaBubba.ERROR_CODE_SLOT_IO,
+                        HubbaBubba.ERROR_NAME_SLOT_IO,
+                        "Konnte Anzahl vorhandener items in slot nicht verringern (IO error)");
 
                 final ObjectMapper mapper = new ObjectMapper();
                 response.status(503);
@@ -420,6 +468,7 @@ public class ControlUnitService extends CandyService {
     @Override
     public RouteMap initializeRoutes() {
         final RouteMap map = new RouteMap();
+
         final Map<String, CandyRoute> postMap = new HashMap<>();
         postMap.put("/control/order/:no", new ControlUnitService.DUCKOrderRoute());
         postMap.put("/control/calibrate/:no", new ControlUnitService.DUCKCalibrateRoute());
@@ -431,8 +480,9 @@ public class ControlUnitService extends CandyService {
         postMap.put("/control/authorize/:id", new ControlUnitService.AuthorizeRoute());
         postMap.put("/control/maintenanceMode", new ControlUnitService.MaintenanceModeRoute());
         postMap.put("/control/cancel", new ControlUnitService.CancelRoute());
-    
+        postMap.put("/control/slot/:no/items/decrease", new ControlUnitService.DUCKSlotDecreaseItemsRoute());
         map.put(HTTPMethod.POST, postMap);
+
         final Map<String, CandyRoute> getMap = new HashMap<>();
         getMap.put("/control/order", new ControlUnitService.InfoRoute());
         getMap.put("/control/slot/:no", new ControlUnitService.DUCKSlotInfoRoute());
